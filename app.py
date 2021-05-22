@@ -1,20 +1,27 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 from sklearn.datasets import make_moons
+from sklearn.model_selection import train_test_split
+
+X,y=make_moons()
+X_train,X_test,y_train,y_test=train_test_split(X,y)
+
 
 st.sidebar.markdown("# Streamlit Dashboard")
 
-dataset=st.sidebar.selectbox(
+dataset=st.sidebar.multiselect(
     'Dataset',
     ('DS1','DS2')
 )
 
-algorithm=st.sidebar.selectbox(
+algorithm=st.sidebar.multiselect(
     'Algorithm',
     ('Gradient Boosting for Classification','XgBoost for Classification')
 )
 
-loss=st.sidebar.selectbox(
+default=st.sidebar.checkbox('Default Hyper Parameter Values')
+
+loss=st.sidebar.multiselect(
     'Loss Function',
     ('deviance','exponential')
 )
@@ -25,7 +32,7 @@ n_estimators=st.sidebar.slider('Boosting Stages')
 
 subsample=st.sidebar.number_input('Subsample')
 
-criterion=st.sidebar.selectbox(
+criterion=st.sidebar.multiselect(
     'Criterion',
     ('friedman_mse','mse','mae')
 )
@@ -42,17 +49,17 @@ min_impurity_decrease=st.sidebar.number_input('Minimum Impurity Decrease')
 
 min_impurity_split=st.sidebar.number_input('Minimum Impurity Split')
 
-init=st.sidebar.selectbox(
+init=st.sidebar.multiselect(
     'Init (Have to think)',
     ('estimator','zero')
 )
 
-random_state=st.sidebar.selectbox(
+random_state=st.sidebar.multiselect(
     'Random State (Have to think)',
     (' ',' ')
 )
 
-max_features=st.sidebar.selectbox(
+max_features=st.sidebar.multiselect(
     'Max Features',
     ('auto','sqrt','log2')
 )
@@ -61,7 +68,7 @@ verbose=st.sidebar.slider('Verbose')
 
 max_leaf_nodes=st.sidebar.slider('Maximum Leaf Nodes')
 
-warm_start=st.sidebar.selectbox(
+warm_start=st.sidebar.multiselect(
     'Warm Start',
     ('True','False')
 )
@@ -74,9 +81,12 @@ tol=st.sidebar.number_input('Tolerance')
 
 ccp_alpha=st.sidebar.number_input('Cost-Complexity Pruning Alpha')
 
-st.pyplot(fig='')
+# fig,ax=plt.subplots()
+#
+# ax.scatter(X.T[0],X.T[1],c=y,cmap='rainbow')
+# st.pyplot(fig)
 
-st.sidebar.button('Set to Default')
+# st.pyplot(fig).empty()
 
 if st.sidebar.button('Run Algorithm'):
     print('Hello! world')
