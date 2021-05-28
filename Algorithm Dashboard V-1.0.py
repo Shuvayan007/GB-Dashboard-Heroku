@@ -105,7 +105,7 @@ if st.sidebar.button('Run Algorithm'):
 
     clf=GradientBoostingClassifier()
     clf.fit(X_train,y_train)
-    streamlit.spinner('Your model is getting trained..')
+    st.spinner('Your model is getting trained..')
     y_pred=clf.predict(X_test)
 
     XX,YY,input_array=draw_meshgrid()
