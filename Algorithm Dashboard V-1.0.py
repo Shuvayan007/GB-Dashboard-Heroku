@@ -31,68 +31,92 @@ algorithm=st.sidebar.selectbox(
     'Algorithm',
     ('Gradient Boosting for Classification','XgBoost for Classification')
 )
-
-default=st.sidebar.checkbox('Default Hyper Parameter Values')
-
-loss=st.sidebar.selectbox(
-    'Loss Function',
-    ('deviance','exponential')
+tuning=st.sidebar.radio(
+    'Hyper Parameter',
+    ('Default Value','Tuning')
 )
+if tuning=='Tuning':
 
-learning_rate=st.sidebar.number_input('Learning Rate')
+    loss=st.sidebar.selectbox(
+        'Loss Function',
+        ('deviance','exponential')
+    )
 
-n_estimators=st.sidebar.slider('Boosting Stages')
+    learning_rate=st.sidebar.number_input('Learning Rate',value=0.1)
 
-subsample=st.sidebar.number_input('Subsample')
+    n_estimators=st.sidebar.slider('Boosting Stages (n_estimators)',min_value=1,max_value=500,value=100)
 
-criterion=st.sidebar.selectbox(
-    'Criterion',
-    ('friedman_mse','mse','mae')
-)
+    subsample=st.sidebar.number_input('Subsample',min_value=0.01,max_value=1.0,value=1.0)
 
-min_samples_split=st.sidebar.number_input('Minimum Samples Split')
+    criterion=st.sidebar.selectbox(
+        'Criterion',
+        ('friedman_mse','mse','mae')
+    )
 
-min_samples_leaf=st.sidebar.number_input('Minimum Samples Leaf')
+    min_samples_split=st.sidebar.slider('Minimum Samples Split',value=2,min_value=2)
 
-min_weight_fraction_leaf=st.sidebar.number_input('Minimum Weight Fraction')
+    min_samples_leaf=st.sidebar.slider('Minimum Samples Leaf',min_value=1,value=1)
 
-max_depth=st.sidebar.slider('Maximum Depth')
+    min_weight_fraction_leaf=st.sidebar.number_input('Minimum Weight Fraction',min_value=0.0,max_value=1.0,value=0.0)
 
-min_impurity_decrease=st.sidebar.number_input('Minimum Impurity Decrease')
+    max_depth=st.sidebar.slider('Maximum Depth',min_value=2,value=3)
 
-min_impurity_split=st.sidebar.number_input('Minimum Impurity Split')
+    min_impurity_decrease=st.sidebar.number_input('Minimum Impurity Decrease',min_value=0.0,max_value=1.0,value=0.0)
 
-init=st.sidebar.selectbox(
-    'Init (Have to think)',
-    ('estimator','zero')
-)
+    min_impurity_split=st.sidebar.number_input('Minimum Impurity Split (Have to think)')
 
-random_state=st.sidebar.selectbox(
-    'Random State (Have to think)',
-    (' ',' ')
-)
+    init=st.sidebar.selectbox(
+        'Init (Have to think)',
+        ('zero','estimator')
+    )
+    ##If init=='estimator' have to think
 
-max_features=st.sidebar.selectbox(
-    'Max Features',
-    ('auto','sqrt','log2')
-)
+    random_state=st.sidebar.slider('Random State',min_value=1,value=1)
 
-verbose=st.sidebar.slider('Verbose')
+    max_features=st.sidebar.selectbox(
+        'Max Features',
+        ('None','auto','sqrt','log2'),
+    )
+    if max_features=='None':
+        max_features=None
 
-max_leaf_nodes=st.sidebar.slider('Maximum Leaf Nodes')
+    verbose=st.sidebar.slider('Verbose (Printing has to be noted)',min_value=0,value=0)
 
-warm_start=st.sidebar.multiselect(
-    'Warm Start',
-    ('True','False')
-)
+    max_leaf_nodes=st.sidebar.selectbox('Maximum Leaf Nodes',
+                                        ('None','Value')
+                                        )
+    if max_leaf_nodes=='None':
+        max_leaf_nodes=None
+    else:
+        max_leaf_nodes=st.sidebar.slider('Value',min_value=1)
 
-validation_fraction=st.sidebar.number_input('Validation Fraction')
+    warm_start=st.sidebar.selectbox(
+        'Warm Start',
+        ('False','True')
+    )
 
-n_iter_no_change= st.sidebar.slider('n Iteration No Change')
+    validation_fraction=st.sidebar.number_input('Validation Fraction',min_value=0.0,max_value=1.0,value=0.1)
 
-tol=st.sidebar.number_input('Tolerance')
+    n_iter=st.sidebar.selectbox('n Iteration No Change',
+                         ('None','Value')
+                         )
+    if n_iter=='Value':
+        n_iter_no_change= st.sidebar.slider('Value')
+    else:
+        n_iter_no_change=None
 
-ccp_alpha=st.sidebar.number_input('Cost-Complexity Pruning Alpha')
+    tol=st.sidebar.number_input('Tolerance',min_value=0.0000,value=0.0001,step=0.0001,format='%.4f')
+
+    ccp_alpha=st.sidebar.number_input('Cost-Complexity Pruning Alpha',value=0.0,min_value=0.0000)
+
+    clf = GradientBoostingClassifier(loss, learning_rate, n_estimators, subsample, criterion, min_samples_split,
+                                     min_samples_leaf, min_weight_fraction_leaf, max_depth ,min_impurity_decrease,
+                                     min_impurity_split, init, random_state, max_features, verbose, max_leaf_nodes)
+
+                                     # warm_start, validation_fraction, n_iter_no_change, tol, ccp_alpha)
+
+else:
+    clf=GradientBoostingClassifier()
 
 fig,ax=plt.subplots()
 
@@ -101,19 +125,19 @@ orig=st.pyplot(fig)
 
 
 if st.sidebar.button('Run Algorithm'):
-    orig.empty()
+    with st.spinner('Your model is getting trained..'):
+        orig.empty()
 
-    clf=GradientBoostingClassifier()
-    clf.fit(X_train,y_train)
-    st.spinner('Your model is getting trained..')
-    y_pred=clf.predict(X_test)
+        clf.fit(X_train,y_train)
+        y_pred=clf.predict(X_test)
 
-    XX,YY,input_array=draw_meshgrid()
-    labels=clf.predict(input_array)
+        XX,YY,input_array=draw_meshgrid()
+        labels=clf.predict(input_array)
 
-    ax.contourf(XX,YY,labels.reshape(XX.shape),alpha=0.3,cmap='rainbow')
+        ax.contourf(XX,YY,labels.reshape(XX.shape),alpha=0.3,cmap='rainbow')
 
-    plt.xlabel('Col1')
-    plt.ylabel('Col2')
-    orig=st.pyplot(fig)
-    st.sidebar.subheader("Accuracy of the model: "+str(round(accuracy_score(y_test,y_pred),2)))
+        plt.xlabel('Col1')
+        plt.ylabel('Col2')
+        orig=st.pyplot(fig)
+        st.sidebar.subheader("Accuracy of the model: "+str(round(accuracy_score(y_test,y_pred),2)))
+    st.success("Done!")
