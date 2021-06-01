@@ -69,7 +69,9 @@ if tuning=='Tuning':
         'Init (Have to think)',
         ('zero','estimator')
     )
-    ##If init=='estimator' have to think
+    if init=='estimator':
+        st.sidebar.error('This feature can only be used if you have made another model, whose outcome is to be used as the initial estimates of your Gradient Boosting model.')
+        st.info("Set 'Init' parameter value to 'zero'")
 
     random_state=st.sidebar.slider('Random State',min_value=1,value=1)
 
@@ -111,9 +113,9 @@ if tuning=='Tuning':
 
     clf = GradientBoostingClassifier(loss, learning_rate, n_estimators, subsample, criterion, min_samples_split,
                                      min_samples_leaf, min_weight_fraction_leaf, max_depth ,min_impurity_decrease,
-                                     min_impurity_split, init, random_state, max_features, verbose, max_leaf_nodes)
+                                     min_impurity_split, init, random_state, max_features, verbose, max_leaf_nodes,
+                                     warm_start, validation_fraction,n_iter_no_change,tol,ccp_alpha)
 
-                                     # warm_start, validation_fraction, n_iter_no_change, tol, ccp_alpha)
 
 else:
     clf=GradientBoostingClassifier()
@@ -125,7 +127,7 @@ orig=st.pyplot(fig)
 
 
 if st.sidebar.button('Run Algorithm'):
-    with st.spinner('Your model is getting trained..'):
+    with st.spinner('Your model is getting trained..:muscle:'):
         orig.empty()
 
         clf.fit(X_train,y_train)
