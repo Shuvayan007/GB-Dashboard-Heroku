@@ -5,6 +5,7 @@ from sklearn.datasets import make_moons
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import accuracy_score
+import subprocess
 
 def draw_meshgrid():
     a = np.arange(start=X[:, 0].min() - 1, stop=X[:, 0].max() + 1, step=0.01)
@@ -151,3 +152,6 @@ if st.sidebar.button('Run Algorithm'):
         orig=st.pyplot(fig)
         st.sidebar.subheader("Accuracy of the model: "+str(round(accuracy_score(y_test,y_pred),2)))
     st.success("Done!")
+# subprocess = subprocess.Popen(clf,shell=True, stdout=subprocess.PIPE)
+# subprocess_return = subprocess.stdout.read()
+# print(subprocess_return)
