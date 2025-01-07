@@ -49,7 +49,7 @@ if tuning=='Tuning':
 
     criterion=st.sidebar.selectbox(
         'Criterion',
-        ('friedman_mse','mse','mae')
+        ('friedman_mse','squared_error')
     )
 
     min_samples_split=st.sidebar.slider('Minimum Samples Split',value=2,min_value=2)
@@ -109,6 +109,11 @@ if tuning=='Tuning':
         ('False','True')
     )
 
+    if warm_start == 'True':
+        warm_start = True
+    else:
+        warm_start = False
+
     validation_fraction=st.sidebar.number_input('Validation Fraction',min_value=0.0,max_value=1.0,value=0.1)
 
     n_iter=st.sidebar.selectbox('n Iteration No Change',
@@ -123,10 +128,15 @@ if tuning=='Tuning':
 
     ccp_alpha=st.sidebar.number_input('Cost-Complexity Pruning Alpha',value=0.0,min_value=0.0000)
 
-    clf = GradientBoostingClassifier(loss, learning_rate, n_estimators, subsample, criterion, min_samples_split,
-                                     min_samples_leaf, min_weight_fraction_leaf, max_depth ,min_impurity_decrease,
-                                     min_impurity_split, init, random_state, max_features, verbose, max_leaf_nodes,
-                                     warm_start, validation_fraction,n_iter_no_change,tol,ccp_alpha)
+    clf = GradientBoostingClassifier(loss = loss, learning_rate = learning_rate, n_estimators = n_estimators, subsample = subsample, criterion = criterion, min_samples_split = min_samples_split,
+                                     min_samples_leaf = min_samples_leaf, min_weight_fraction_leaf = min_weight_fraction_leaf, max_depth = max_depth ,min_impurity_decrease = min_impurity_decrease,
+                                     init = init, random_state = random_state, max_features = max_features, verbose = verbose, max_leaf_nodes = max_leaf_nodes,
+                                     warm_start = warm_start, validation_fraction = validation_fraction,n_iter_no_change = n_iter_no_change,tol = tol,ccp_alpha = ccp_alpha)
+                                    # loss, learning_rate
+                                    #  , n_estimators, subsample, criterion, min_samples_split,
+                                    #  min_samples_leaf, min_weight_fraction_leaf, max_depth ,min_impurity_decrease,
+                                    #  min_impurity_split, init, random_state, max_features, verbose, max_leaf_nodes,
+                                    #  warm_start, validation_fraction,n_iter_no_change,tol,ccp_alpha)
 else:
     clf=GradientBoostingClassifier()
 
