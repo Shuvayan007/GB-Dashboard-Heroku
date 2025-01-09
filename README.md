@@ -22,7 +22,7 @@ Welcome to the **Gradient Boosting Classifier Dashboard**, a real-time interacti
 
 Check out the live dashboard on Streamlit Community Cloud:
 
-[**Gradient Boosting Classifier Dashboard**](<Insert-your-deployment-link-here>)
+[**Gradient Boosting Classifier Dashboard**](https://gb-dashboard-v3.streamlit.app/)
 
 ---
 
@@ -67,7 +67,7 @@ To run the dashboard locally, follow these steps:
 
 ```
 .
-├── app.py               # Main application script
+├── GB_Dashboard_V2.py   # Main application script
 ├── requirements.txt     # Python dependencies
 ├── README.md            # Project documentation
 └── .streamlit           # Streamlit configuration files
