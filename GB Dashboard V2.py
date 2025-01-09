@@ -38,7 +38,7 @@ if tuning=='Tuning':
     st.sidebar.info('Initially, all parameter values are set to default. Change them according to your need.:smiley:')
     loss=st.sidebar.selectbox(
         'Loss Function',
-        ('deviance','exponential')
+        ('log_loss','exponential')
     )
 
     learning_rate=st.sidebar.number_input('Learning Rate',value=0.1)
